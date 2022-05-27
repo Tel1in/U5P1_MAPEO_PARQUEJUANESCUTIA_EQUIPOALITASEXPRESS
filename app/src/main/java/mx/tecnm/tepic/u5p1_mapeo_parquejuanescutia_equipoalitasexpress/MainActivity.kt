@@ -1,6 +1,9 @@
 package mx.tecnm.tepic.u5p1_mapeo_parquejuanescutia_equipoalitasexpress
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -22,6 +25,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     var base = FirebaseFirestore.getInstance()
     var posicion = ArrayList<Data>()
     var lista = ArrayList<String>()
+    lateinit var locacion : LocationManager
+    var c1 : Location = Location("")
+    var c2 : Location = Location("")
     var siPermiso = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +89,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
             }
 
+        binding.lista.setOnItemClickListener { adapterView, view, i, l ->
+                var id = lista.get(i)
+                var nombre = id.split("\n")
+                base.collection("parque").document(nombre[0]).addSnapshotListener { value, error ->
+                    if(value!!.getString("nombre")!=null){
+                        val extra = Intent(this,MainActivity2::class.java).putExtra("nombre",value.getString("nombre"))
+                        startActivity(extra)
+                    }
+                }
+
+        }
+
+
     }
+
+
 
     override fun onMapReady(p0: GoogleMap) {
         var mMap = p0
