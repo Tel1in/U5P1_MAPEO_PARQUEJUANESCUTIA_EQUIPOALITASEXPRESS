@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/texto"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="PARQUE JUAN ESCUTIA"
+        android:textColor="#FD0303"/>
+
+    <EditText
+        android:id="@+id/busqueda"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:hint="Nombre del lugar a buscar"/>
+
+    <Button
+        android:id="@+id/buton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LOCALIZACION"
+        />
+
+    <Button
+        android:id="@+id/EQUIPO"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="EQUIPO ALITAS EXPRESS"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/texto11"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Ubicacion encontrada"
+        android:textColor="#FD0303"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista"
+       />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        tools:context=".MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+</LinearLayout>

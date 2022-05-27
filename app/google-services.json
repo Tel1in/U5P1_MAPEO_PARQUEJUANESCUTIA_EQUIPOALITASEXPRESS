@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "101266647096",
+    "project_id": "u5pmapeoparquejuanescutia",
+    "storage_bucket": "u5pmapeoparquejuanescutia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101266647096:android:8d2e16aba892f6363cdecd",
+        "android_client_info": {
+          "package_name": "mx.tecnm.tepic.u5p1_mapeo_parquejuanescutia_equipoalitasexpress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101266647096-qe9dta1tvpu62ljij8c2ffn00u28bnec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZmdwpNCazZmP4yQbR79W0br5E9ER4Du0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101266647096-qe9dta1tvpu62ljij8c2ffn00u28bnec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
