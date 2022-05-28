@@ -1,11 +1,15 @@
 package mx.tecnm.tepic.u5p1_mapeo_parquejuanescutia_equipoalitasexpress
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -17,9 +21,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import mx.tecnm.tepic.u5p1_mapeo_parquejuanescutia_equipoalitasexpress.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, AdapterView.OnItemClickListener {
 
     lateinit var binding: ActivityMainBinding
     var base = FirebaseFirestore.getInstance()
@@ -67,6 +72,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE),siPermiso)
         }
 
+        locacion = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var oyente = Oyente(this)
+        locacion.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, oyente)
+
+
         base.collection("parque")
             .addSnapshotListener { querySnapshot, error ->
                 if(error != null){
@@ -75,6 +85,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 posicion.clear()
+                var lista = ArrayList<String>()
                 for(document in querySnapshot!!){
                     val data = Data()
                     data.nombre = document.getString("nombre").toString()
@@ -87,24 +98,63 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 binding.lista.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,lista)
 
+
             }
 
-        binding.lista.setOnItemClickListener { adapterView, view, i, l ->
-                var id = lista.get(i)
-                var nombre = id.split("\n")
-                base.collection("parque").document(nombre[0]).addSnapshotListener { value, error ->
-                    if(value!!.getString("nombre")!=null){
-                        val extra = Intent(this,MainActivity2::class.java).putExtra("nombre",value.getString("nombre"))
-                        startActivity(extra)
-                    }
-                }
+        binding.lista.setOnItemClickListener(this)
 
+        binding.buton.setOnClickListener {
+            var busqueda = binding.busqueda.text.toString()
+            if(busqueda == " "){
+                binding.texto11.setText("")
+            }
+            base.collection("parque")
+                .whereEqualTo("nombre",busqueda)
+                .addSnapshotListener { value, error ->
+                    if (error!=null){
+                        AlertDialog.Builder(this)
+                            .setMessage(error.message)
+                            .show()
+                        return@addSnapshotListener
+                    }
+                    var res = " "
+                    for(document in value!!){
+                        c1.longitude = document.getGeoPoint("pos1")!!.longitude
+                        c1.latitude = document.getGeoPoint("pos1")!!.latitude
+                        c2.longitude = document.getGeoPoint("pos2")!!.longitude
+                        c2.latitude = document.getGeoPoint("pos2")!!.latitude
+                    }
+                    res = "(${(c1.latitude)}, ${c1.longitude}),(${c2.latitude}, ${c2.longitude})"
+                    binding.texto11.setText(res)
+                }
         }
+
+
 
 
     }
 
+    fun mover(idSeleccionado:String){
+        var otraVentana = Intent(this,MainActivity2::class.java)
+        otraVentana.putExtra("idSeleccionado",idSeleccionado)
+        startActivity(otraVentana)
+    }
 
+    override fun onItemClick(p0: AdapterView<*>, p1: View, position: Int, p3: Long) {
+        var item = binding.lista.getItemAtPosition(position).toString()
+        var nombre = item.split("\n")
+        base.collection("parque").document(nombre[0]).addSnapshotListener { value, error ->
+            if(value!!.getString("nombre")!=null){
+                val extra = Intent(this,MainActivity2::class.java)
+                    extra.putExtra("nombre",value.getString("nombre"))
+                startActivity(extra)
+            }
+
+        }
+
+        //Envia al MainActivity2 el nombre seleccionado en el item.
+
+    }
 
     override fun onMapReady(p0: GoogleMap) {
         var mMap = p0
@@ -138,7 +188,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isZoomControlsEnabled = true
     }
 
+    class Oyente(puntero:MainActivity) : LocationListener {
+        var p = puntero
+        var baseRemota = FirebaseFirestore.getInstance()
+        override fun onLocationChanged(location: Location) {
+            p.binding.coordenadasView.setText("Coordenadas:\n${location.latitude}, ${location.longitude}")
+            var posicionActual = GeoPoint(location.latitude, location.longitude)
+            for (item in p.posicion) {
+                if (item.estoyEn(posicionActual)) {
+                    p.binding.ubicado.setText("Usted se encuentra en:\n${item.nombre}")
 
-
+                }
+            }
+        }
+    }
 
 }

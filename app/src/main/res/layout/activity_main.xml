@@ -44,11 +44,33 @@
         android:textSize="16sp"
         android:text="Ubicacion encontrada"
         android:textColor="#FD0303"/>
-    <ListView
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/lista"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/ubicado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lista"
-       />
+        android:layout_marginBottom="5dp"
+        android:text="Aun no se encuentra en una locación conocida"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/coordenadasView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

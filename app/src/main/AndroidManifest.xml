@@ -16,7 +16,7 @@
         android:theme="@style/Theme.U5P1_MAPEO_PARQUEJUANESCUTIA_EQUIPOALITASEXPRESS">
         <activity
             android:name=".MainActivity2"
-            android:exported="false" />
+            android:exported="true" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
